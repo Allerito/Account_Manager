@@ -5,7 +5,7 @@ import re
 
 __version__ = "0.1.0"
 
-def read_data(temp_accounts):
+def read_data(temp_accounts: list)-> None:
     """Read JSON data and upload data on temp_account
     """
     filename = "accounts.json"
@@ -24,7 +24,7 @@ def read_data(temp_accounts):
                     tk.messagebox.showinfo(title=None, message="Your file wasn't modified", icon="info")
                     return
 
-def check_data():
+def check_data()-> None:
     """Check data that the user insert"""
     site = tb_site.get()
     site_regex = re.compile(r"[A-Za-z]+\.[A-Za-z]+", re.IGNORECASE)
@@ -46,7 +46,7 @@ def check_data():
         tk.messagebox.showinfo(title=None, message="Your information aren't correct, check if you inser all the info", icon="Error")
     
 
-def save_data(site, username, email, password, temp_accounts):
+def save_data(site: str, username: str, email: str, password: str, temp_accounts: list)-> None:
     """Save data inside JSON file
 
     :param site: Account site
