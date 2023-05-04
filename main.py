@@ -15,13 +15,13 @@ def read_data(temp_accounts: list)-> None:
     except FileNotFoundError:
         with open(filename, "w", encoding="utf-8") as a:
             a.write("[]")
-    except json.JSONDecodeError: 
+    except json.JSONDecodeError:
         with open(filename, "r", encoding="utf-8") as a:
             if a.read() == "":
-                answer = tk.messagebox.askokcancel(title=None, message="Your file is empty. Are you sure to overwrite the file?", icon="warning")
+                answer = tk.messagebox.askokcancel(title="Empty file", message="Your file is empty. Are you sure to overwrite the file?", icon="warning")
 
                 if not answer:
-                    tk.messagebox.showinfo(title=None, message="Your file wasn't modified", icon="info")
+                    tk.messagebox.showinfo(title="Empty file", message="Your file wasn't modified", icon="info")
                     return
 
 def check_data()-> None:
@@ -34,17 +34,18 @@ def check_data()-> None:
     password = tb_password.get()
 
     if len(site) > 0 and len(username) > 0 and len(email) > 0 and len(password) > 0:
-            if site_regex.match(site) and email_regex.match(email):
-                site = site.strip()
-                username = username.strip()
-                email = email.strip()
-                password = password.strip()
-                save_data(site, username, email, password, temp_accounts)
-            else:
-                tk.messagebox.showinfo(title=None, message="Your site or email doesn't conform to a normal one", icon="Error")
+        if site_regex.match(site) and email_regex.match(email):
+            site = site.strip()
+            username = username.strip()
+            email = email.strip()
+            password = password.strip()
+            save_data(site, username, email, password, temp_accounts)
+        else:
+            tk.messagebox.showinfo(title="Information error", message="Your site or email doesn't conform to a normal one", icon="error")
+            return
     else:
-        tk.messagebox.showinfo(title=None, message="Your information aren't correct, check if you inser all the info", icon="Error")
-    
+        tk.messagebox.showinfo(title="Information error", message="Your information aren't correct, check if you insert all the info", icon="error")
+        return
 
 def save_data(site: str, username: str, email: str, password: str, temp_accounts: list)-> None:
     """Save data inside JSON file
@@ -66,8 +67,14 @@ def save_data(site: str, username: str, email: str, password: str, temp_accounts
         "email":email,
         "password":password
     }
-    temp_accounts.append(account_dict)
+    for account in temp_accounts:
+        if account_dict == account:
+            answer = tk.messagebox.askokcancel(title="Another account exist", message="There is another account associated to this site, do you want to create another account?", icon="warning")
+            if not answer:
+                tk.messagebox.showinfo(title="Another account exist", message="The account wasn't create", icon="info")
+                return
 
+    temp_accounts.append(account_dict)
     json_object = json.dumps(temp_accounts, indent=4)
     with open("accounts.json", "w", encoding='utf-8') as outfile:
         outfile.write(json_object)
@@ -76,6 +83,7 @@ if __name__=="__main__":
     temp_accounts=[]
 
     win = tk.Tk()
+    win.geometry("200x200")
     win.title(f"Account Manager {__version__}")
 
     lb_site = tk.Label(win, text="Site:")
