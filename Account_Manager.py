@@ -1,15 +1,42 @@
 from pathlib import Path
+#import re
 
-from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage
+import tkinter as tk
+from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox
 
+import libs.operations as op
 
+__version__ = "1.1.0"
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Aller\OneDrive\Documenti\GitHub\Account Manager\build\assets\frame0")
+ASSETS_PATH = OUTPUT_PATH / Path(r"C:\Users\Aller\OneDrive\Documenti\GitHub\Account_Manager\assets\frame0")
 
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
 
+
+def check_data()-> None:
+    """Check data that the user insert"""
+    site = str(entry_1)
+    username = str(entry_2)
+    email = str(entry_3)
+    password = str(entry_4)
+    # site_regex = re.compile(r"[A-Za-z]+\.[A-Za-z]+", re.IGNORECASE)
+    # email_regex= re.compile(r"[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[A-Za-z0-9](?:[-A-Za-z0-9]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[-A-Za-z0-9]*[A-Za-z0-9])?", re.IGNORECASE) #TODO: FIX
+
+    if len(site) > 0 and len(username) > 0 and len(email) > 0 and len(password) > 0:
+        #if site_regex.match(site) and email_regex.match(email):
+            site = site.strip()
+            username = username.strip()
+            email = email.strip()
+            password = password.strip()
+            op.save_data(site, username, email, password)
+        # else:
+        #     tk.messagebox.showinfo(title="Information error", message="Your site or email doesn't conform to a normal one", icon="error")
+        #     return
+    else:
+        tk.messagebox.showinfo(title="Information error", message="Your information aren't correct, check if you insert all the info", icon="error")
+        return
 
 window = Tk()
 
@@ -144,13 +171,14 @@ entry_4.place(
     height=21.0
 )
 
+#Save button
 button_image_1 = PhotoImage(
     file=relative_to_assets("button_1.png"))
 button_1 = Button(
     image=button_image_1,
     borderwidth=0,
     highlightthickness=0,
-    command=lambda: print("button_1 clicked"),
+    command=check_data,
     relief="flat"
 )
 button_1.place(
@@ -160,6 +188,7 @@ button_1.place(
     height=60.0
 )
 
+#Password Generator
 button_image_2 = PhotoImage(
     file=relative_to_assets("button_2.png"))
 button_2 = Button(
@@ -176,6 +205,8 @@ button_2.place(
     height=46.0
 )
 
+
+#Settings
 button_image_3 = PhotoImage(
     file=relative_to_assets("button_3.png"))
 button_3 = Button(
@@ -192,6 +223,7 @@ button_3.place(
     height=75.0
 )
 
+#Accounts
 button_image_4 = PhotoImage(
     file=relative_to_assets("button_4.png"))
 button_4 = Button(
