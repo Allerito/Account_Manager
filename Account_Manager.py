@@ -1,6 +1,5 @@
 from pathlib import Path
 import os
-#import re
 
 import tkinter as tk
 from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox
@@ -218,7 +217,7 @@ if __name__ == "__main__":
         image=button_image_4,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: print("button_4 clicked"),
+        command=lambda: os.system(op.ACCOUNTS_PATH),
         relief="flat"
     )
     button_4.place(

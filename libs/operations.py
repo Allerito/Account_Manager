@@ -4,7 +4,7 @@ import tkinter as tk
 from tkinter import messagebox, filedialog
 
 ACCOUNTS_PATH = os.path.expanduser(r"~\Documents\accounts.json")
-
+READER=["notepad", "vscode", "notepad++"]
 
 def file_path()-> None:
     """Allow the user to choose accounts.json folder"""
