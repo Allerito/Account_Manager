@@ -7,7 +7,7 @@ from tkinter import Tk, Canvas, Entry, Text, Button, PhotoImage, messagebox
 
 import libs.operations as op
 
-__version__ = "1.1.0"
+__version__ = "2.1.0"
 OUTPUT_PATH = Path(__file__).parent
 ASSETS_PATH = OUTPUT_PATH / Path(os.path.expanduser(r"~\Documents\GitHub\Account_Manager\assets\frame0"))
 
@@ -26,6 +26,7 @@ if __name__ == "__main__":
     op.read_json_data()
 
     window = Tk()
+    window.title(f"Account Manager {__version__}")
 
     window.geometry("751x327")
     window.configure(bg = "#FFFFFF")
