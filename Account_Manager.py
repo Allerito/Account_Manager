@@ -16,9 +16,9 @@ def relative_to_assets(path: str) -> Path:
 def form_data()-> None:
     """Take account infos"""
     site = str(entry_1.get())
-    username = str(entry_2.get())
-    email = str(entry_3.get())
-    password = str(entry_4.get())
+    username = str(entry_3.get())
+    email = str(entry_4.get())
+    password = str(entry_2.get())
     op.check_data(site, username, email, password)
 
 if __name__ == "__main__":

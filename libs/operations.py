@@ -2,9 +2,21 @@ import json
 import os
 import tkinter as tk
 from tkinter import messagebox, filedialog
+from cryptography.fernet import Fernet
 
 ACCOUNTS_PATH = os.path.expanduser(r"~\Documents\accounts.json")
 READER=["notepad", "vscode", "notepad++"]
+KEY = "admin"
+
+def encrypt_file(json_object: str)-> str:
+    fernet = Fernet(KEY)
+    encrypt_json = fernet.encrypt(json_object.encode())
+    return encrypt_json
+
+def decrypt_file(accounts: str):
+    fernet = Fernet(KEY)
+    decrypt_json = fernet.decrypt(accounts).decode()
+    return decrypt_json
 
 def file_path()-> None:
     """Allow the user to choose accounts.json folder"""
@@ -18,11 +30,11 @@ def file_path()-> None:
 def read_json_data()-> list[dict] or None:
     """Read JSON data and upload data on temp_account"""
     #file_path()
-    print(ACCOUNTS_PATH)
     local_accounts=[]
     try:
         with open(ACCOUNTS_PATH,"r", encoding="utf-8") as a:
-            local_accounts = json.load(a)
+            local_accounts = decrypt_file(a)
+            local_accounts = json.load(local_accounts)
     except FileNotFoundError:
         #file_path()
         with open(ACCOUNTS_PATH, "w", encoding="utf-8") as a:
@@ -98,5 +110,6 @@ def save_data(site: str, username: str, email: str, password: str)-> None:
 
     local_accounts.append(temp_account)
     json_object = json.dumps(local_accounts, indent=4)
+    enc_json = encrypt_file(json_object)
     with open(ACCOUNTS_PATH, "w", encoding='utf-8') as outfile:
-        outfile.write(json_object)
+        outfile.write(enc_json)
