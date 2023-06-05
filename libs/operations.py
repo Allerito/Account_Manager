@@ -3,24 +3,28 @@ import os
 import tkinter as tk
 from tkinter import messagebox, filedialog
 
-DOCS_FOLDER = os.path.expanduser(r"~\Documenti\accounts.json")
-ACCOUNTS_PATH = DOCS_FOLDER
+ACCOUNTS_PATH = os.path.expanduser(r"~\Documents\accounts.json")
 
-def file_path():
-    # folder_selected = filedialog.askdirectory()
-    # if folder_selected != DOCS_FOLDER:
-    #     ACCOUNTS_PATH = folder_selected
-    # ACCOUNTS_PATH += r"\accounts.json"
-    return
+
+def file_path()-> None:
+    """Allow the user to choose accounts.json folder"""
+    folder_selected = filedialog.askdirectory()
+    if folder_selected is None:
+        ACCOUNTS_PATH = os.path.expanduser(r"~\Documents\accounts.json")
+    else:
+        ACCOUNTS_PATH = folder_selected
+    ACCOUNTS_PATH += r"\accounts.json"
 
 def read_json_data()-> list[dict] or None:
     """Read JSON data and upload data on temp_account"""
+    #file_path()
+    print(ACCOUNTS_PATH)
     local_accounts=[]
     try:
         with open(ACCOUNTS_PATH,"r", encoding="utf-8") as a:
             local_accounts = json.load(a)
     except FileNotFoundError:
-        file_path()
+        #file_path()
         with open(ACCOUNTS_PATH, "w", encoding="utf-8") as a:
             a.write("[]")
     except json.JSONDecodeError:
@@ -32,6 +36,39 @@ def read_json_data()-> list[dict] or None:
                     tk.messagebox.showinfo(title="Empty file", message="Your file wasn't modified", icon="info")
                     return
     return local_accounts
+
+def check_data(site: str, username: str, email: str, password: str):
+    """Check account infos
+
+    :param site: Account site
+    :type site: str
+    :param username: Account username
+    :type username: str
+    :param email: Account email
+    :type email: str
+    :param password: Account password
+    :type password: str
+    """
+    #Strip all infos
+    site = site.strip()
+    username = username.strip()
+    email = email.strip()
+    password = password.strip()
+
+    #Regex
+    # site_regex = re.compile(r"[A-Za-z]+\.[A-Za-z]+", re.IGNORECASE)
+    # email_regex= re.compile(r"[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[A-Za-z0-9](?:[-A-Za-z0-9]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[-A-Za-z0-9]*[A-Za-z0-9])?", re.IGNORECASE) #TODO: FIX
+
+    #Check that all data is correct
+    if len(site) > 0 and len(username) > 0 and len(email) > 0 and len(password) > 0:
+        #if site_regex.match(site) and email_regex.match(email):
+            save_data(site, username, email, password)
+        # else:
+        #     tk.messagebox.showinfo(title="Information error", message="Your site or email doesn't conform to a normal one", icon="error")
+        #     return
+    else:
+        tk.messagebox.showinfo(title="Information error", message="Your information aren't correct, check if you insert all the info", icon="error")
+        return
 
 def save_data(site: str, username: str, email: str, password: str)-> None:
     """Save data inside JSON file
@@ -63,6 +100,3 @@ def save_data(site: str, username: str, email: str, password: str)-> None:
     json_object = json.dumps(local_accounts, indent=4)
     with open(ACCOUNTS_PATH, "w", encoding='utf-8') as outfile:
         outfile.write(json_object)
-
-if __name__=="__main__":
-    read_json_data()
