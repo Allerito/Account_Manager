@@ -2,20 +2,35 @@ import json
 import os
 import tkinter as tk
 from tkinter import messagebox, filedialog
+from tkinter.simpledialog import askstring
 from cryptography.fernet import Fernet
 
 ACCOUNTS_PATH = os.path.expanduser(r"~\Documents\accounts.json")
 READER=["notepad", "vscode", "notepad++"]
 KEY = "admin"
+FERNET = Fernet(KEY)
 
 def encrypt_file(json_object: str)-> str:
-    fernet = Fernet(KEY)
-    encrypt_json = fernet.encrypt(json_object.encode())
+    """Encrypt JSON file for protect your password
+
+    :param json_object: data to encrypt
+    :type json_object: str
+    :return: encrypted data
+    :rtype: str
+    """
+    encrypt_json = FERNET.encrypt(json_object.encode())
     return encrypt_json
 
-def decrypt_file(accounts: str):
-    fernet = Fernet(KEY)
-    decrypt_json = fernet.decrypt(accounts).decode()
+def decrypt_file(accounts: str)-> str:
+    """Decrypt JSON file
+
+    :param accounts: data to decrypt
+    :type accounts: str
+    :return: decrypted data
+    :rtype: str
+    """
+    key = askstring('Password', 'What is your password?')
+    decrypt_json = FERNET.decrypt(accounts).decode()
     return decrypt_json
 
 def file_path()-> None:
