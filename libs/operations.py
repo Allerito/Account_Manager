@@ -10,7 +10,7 @@ READER=["notepad", "vscode", "notepad++"]
 KEY = "admin"
 FERNET = Fernet(KEY)
 
-def encrypt_file(json_object: str)-> str:
+def encrypt_file(json_file: json)-> str:
     """Encrypt JSON file for protect your password
 
     :param json_object: data to encrypt
@@ -18,10 +18,12 @@ def encrypt_file(json_object: str)-> str:
     :return: encrypted data
     :rtype: str
     """
-    encrypt_json = FERNET.encrypt(json_object.encode())
+    with open(ACCOUNTS_PATH,"r", encoding="utf-8") as a:
+        json_file = a.read()
+    encrypt_json = FERNET.encrypt(json_file)
     return encrypt_json
 
-def decrypt_file(accounts: str)-> str:
+def decrypt_file(json_file: str)-> str:
     """Decrypt JSON file
 
     :param accounts: data to decrypt
@@ -30,7 +32,7 @@ def decrypt_file(accounts: str)-> str:
     :rtype: str
     """
     key = askstring('Password', 'What is your password?')
-    decrypt_json = FERNET.decrypt(accounts).decode()
+    decrypt_json = FERNET.decrypt(json_file)
     return decrypt_json
 
 def file_path()-> None:
