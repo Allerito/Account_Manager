@@ -10,7 +10,7 @@ READER=["notepad", "vscode", "notepad++"]
 KEY = "admin"
 FERNET = Fernet(KEY)
 
-def encrypt_file(json_file: json)-> str:
+def encrypt_file(json_file: str)-> str:
     """Encrypt JSON file for protect your password
 
     :param json_object: data to encrypt
