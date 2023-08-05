@@ -3,68 +3,35 @@ import os
 import tkinter as tk
 from tkinter import messagebox, filedialog
 from tkinter.simpledialog import askstring
-from cryptography.fernet import Fernet
 
-ACCOUNTS_PATH = os.path.expanduser(r"~\Documents\accounts.json")
-READER=["notepad", "vscode", "notepad++"]
-KEY = "admin"
-FERNET = Fernet(KEY)
-
-def encrypt_file(json_file: str)-> str:
-    """Encrypt JSON file for protect your password
-
-    :param json_object: data to encrypt
-    :type json_object: str
-    :return: encrypted data
-    :rtype: str
-    """
-    with open(ACCOUNTS_PATH,"r", encoding="utf-8") as a:
-        json_file = a.read()
-    encrypt_json = FERNET.encrypt(json_file)
-    return encrypt_json
-
-def decrypt_file(json_file: str)-> str:
-    """Decrypt JSON file
-
-    :param accounts: data to decrypt
-    :type accounts: str
-    :return: decrypted data
-    :rtype: str
-    """
-    key = askstring('Password', 'What is your password?')
-    decrypt_json = FERNET.decrypt(json_file)
-    return decrypt_json
+ACCOUNTS_PATH = os.path.expanduser(r"~\Desktop\AA\accounts.json")
 
 def file_path()-> None:
     """Allow the user to choose accounts.json folder"""
     folder_selected = filedialog.askdirectory()
     if folder_selected is None:
-        ACCOUNTS_PATH = os.path.expanduser(r"~\Documents\accounts.json")
+        ACCOUNTS_PATH = os.path.expanduser(r"~\Desktop\AA\accounts.json")
     else:
         ACCOUNTS_PATH = folder_selected
     ACCOUNTS_PATH += r"\accounts.json"
 
 def read_json_data()-> list[dict] or None:
-    """Read JSON data and upload data on temp_account"""
-    #file_path()
+    """Read JSON data and upload data on temp_accounts"""
     local_accounts=[]
     try:
-        with open(ACCOUNTS_PATH,"r", encoding="utf-8") as a:
-            local_accounts = decrypt_file(a)
-            local_accounts = json.load(local_accounts)
+        with open(ACCOUNTS_PATH, "r", encoding="utf-8") as a:
+            local_accounts = a.read()
     except FileNotFoundError:
-        #file_path()
         with open(ACCOUNTS_PATH, "w", encoding="utf-8") as a:
-            a.write("[]")
+            a.write("")
     except json.JSONDecodeError:
         with open(ACCOUNTS_PATH, "r", encoding="utf-8") as a:
-            if a.read() == "":
-                answer = tk.messagebox.askokcancel(title="Empty file", message="Your file is empty. Are you sure to overwrite the file?", icon="warning")
+            answer = tk.messagebox.askokcancel(title="Empty file", message="Your file is empty. Are you sure to overwrite the file?", icon="warning")
 
-                if not answer:
-                    tk.messagebox.showinfo(title="Empty file", message="Your file wasn't modified", icon="info")
-                    return
-    return local_accounts
+            if not answer:
+                tk.messagebox.showinfo(title="Empty file", message="Your file wasn't modified", icon="info")
+                return
+    return list(local_accounts)
 
 def check_data(site: str, username: str, email: str, password: str):
     """Check account infos
@@ -84,7 +51,7 @@ def check_data(site: str, username: str, email: str, password: str):
     email = email.strip()
     password = password.strip()
 
-    #Regex
+    #TODO: Regex
     # site_regex = re.compile(r"[A-Za-z]+\.[A-Za-z]+", re.IGNORECASE)
     # email_regex= re.compile(r"[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+(?:\.[-A-Za-z0-9!#$%&'*+/=?^_`{|}~]+)*@(?:[A-Za-z0-9](?:[-A-Za-z0-9]*[A-Za-z0-9])?\.)+[A-Za-z0-9](?:[-A-Za-z0-9]*[A-Za-z0-9])?", re.IGNORECASE) #TODO: FIX
 
@@ -111,6 +78,7 @@ def save_data(site: str, username: str, email: str, password: str)-> None:
     :param password: Account password
     :type password: string
     """
+    already_find = False
     local_accounts = read_json_data()
     temp_account = {
         "site":site,
@@ -119,14 +87,15 @@ def save_data(site: str, username: str, email: str, password: str)-> None:
         "password":password
     }
     for account in local_accounts:
+        if already_find:
+            break
         if temp_account == account:
+            already_find = True
             answer = tk.messagebox.askokcancel(title="Another account exist", message="There is another account associated to this site, do you want to create another account?", icon="warning")
             if not answer:
                 tk.messagebox.showinfo(title="Another account exist", message="The account wasn't create", icon="info")
                 return
-
     local_accounts.append(temp_account)
-    json_object = json.dumps(local_accounts, indent=4)
-    enc_json = encrypt_file(json_object)
+    json_string = json.dumps(local_accounts, indent=4)
     with open(ACCOUNTS_PATH, "w", encoding='utf-8') as outfile:
-        outfile.write(enc_json)
+        outfile.write(json_string)

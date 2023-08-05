@@ -1,6 +1,3 @@
-#-----------------------------------------------------#
-#           Password Generator by Allerito            #
-#-----------------------------------------------------#
 import random
 import string
 import tkinter as tk
@@ -26,6 +23,7 @@ def generate_password() -> None:
         if password_length == 8 or password_length > 8 and password_length < 64 or password_length == 64:
             password = ''.join(random.choice(chars) for i in range(password_length))
             password_output.configure(text=password)
+            copied_label.configure(text="Password copied in clipboard")
             pyperclip.copy(password)
         else:
             password_output.configure(text="Password length need to be between 8 and 64")
@@ -66,4 +64,7 @@ if __name__ == "__main__":
 
     password_output = tk.Label(win, text="")
     password_output.pack()
+
+    copied_label = tk.Label(win, text="")
+    copied_label.pack()
     win.mainloop()

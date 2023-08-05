@@ -8,7 +8,7 @@ import libs.operations as op
 
 __version__ = "2.1.0"
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(os.path.expanduser(r"~\Documents\GitHub\Account_Manager\assets\frame0"))
+ASSETS_PATH = OUTPUT_PATH / Path(os.path.expanduser(r"~\Desktop\AA\assets\frame0"))
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -20,6 +20,10 @@ def form_data()-> None:
     email = str(entry_4.get())
     password = str(entry_2.get())
     op.check_data(site, username, email, password)
+
+def run_pwd_generator() -> None:
+   with open("libs\generator.py") as f:
+    exec(f.read())
 
 if __name__ == "__main__":
     op.read_json_data()
@@ -182,7 +186,7 @@ if __name__ == "__main__":
         image=button_image_2,
         borderwidth=0,
         highlightthickness=0,
-        command=lambda: print("button_2 clicked"),
+        command=run_pwd_generator,
         relief="flat"
     )
     button_2.place(
