@@ -8,7 +8,7 @@ import libs.operations as op
 
 __version__ = "2.1.0"
 OUTPUT_PATH = Path(__file__).parent
-ASSETS_PATH = OUTPUT_PATH / Path(os.path.expanduser(r"~\Desktop\AA\assets\frame0"))
+ASSETS_PATH = OUTPUT_PATH / Path(os.path.expanduser(r"~\Documents\GitHub\Account_Manager\assets\frame0"))
 
 def relative_to_assets(path: str) -> Path:
     return ASSETS_PATH / Path(path)
@@ -22,8 +22,9 @@ def form_data()-> None:
     op.check_data(site, username, email, password)
 
 def run_pwd_generator() -> None:
-   with open("libs\generator.py") as f:
-    exec(f.read())
+    """Run password generator file"""
+    with open("libs\generator.py", encoding='utf-8') as f:
+        exec(f.read())
 
 if __name__ == "__main__":
     op.read_json_data()

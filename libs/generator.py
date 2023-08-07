@@ -9,8 +9,9 @@ def generate_password() -> None:
     """Password generator Function"""
 
     chars = ""
+    print(type(length_spinbox.get()), length_spinbox.get())
     password_length = int(length_spinbox.get())
-
+    
     if include_lower_var.get():
         chars += string.ascii_lowercase
     if include_upper_var.get():

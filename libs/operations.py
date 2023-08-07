@@ -4,13 +4,13 @@ import tkinter as tk
 from tkinter import messagebox, filedialog
 from tkinter.simpledialog import askstring
 
-ACCOUNTS_PATH = os.path.expanduser(r"~\Desktop\AA\accounts.json")
+ACCOUNTS_PATH = os.path.expanduser(r"~\Documents\accounts.json")
 
 def file_path()-> None:
     """Allow the user to choose accounts.json folder"""
     folder_selected = filedialog.askdirectory()
     if folder_selected is None:
-        ACCOUNTS_PATH = os.path.expanduser(r"~\Desktop\AA\accounts.json")
+        ACCOUNTS_PATH = os.path.expanduser(r"~\Documents\accounts.json")
     else:
         ACCOUNTS_PATH = folder_selected
     ACCOUNTS_PATH += r"\accounts.json"
